@@ -23,6 +23,14 @@ class Users(Base):
     def __repr__(self):
         return '<User {}>'.format(self.name)
 
+    def save(self):
+        db_session.add(self)
+        db_session.commit()
+
+    def delete(self):
+        db_session.delete(self)
+        db_session.commit()
+
 class Orders(Base):
     __tablename__='orders'
     id = Column(Integer, primary_key=True)
@@ -34,6 +42,34 @@ class Orders(Base):
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     user = relationship('Users')
+
+    def __repr__(self):
+        return '<Orders {}>'.format(self.name)
+
+    def save(self):
+        db_session.add(self)
+        db_session.commit()
+
+    def delete(self):
+        db_session.delete(self)
+        db_session.commit()
+
+class Sign_In(Base):
+    __tablename__ = 'sign_in'
+    id = Column(Integer, primary_key=True)
+    login = Column(String(20), unique=True)
+    password = Column(String(20))
+
+    def __repr__(self):
+        return '<Sign_In {}>'.format(self.login)
+
+    def save(self):
+        db_session.add(self)
+        db_session.commit()
+
+    def delete(self):
+        db_session.delete(self)
+        db_session.commit()
 
 def init_db():
     Base.metadata.create_all(bind=engine)

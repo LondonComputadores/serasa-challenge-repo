@@ -5,26 +5,6 @@ import json
 app = Flask(__name__)
 api = Api(app)
 
-users = [
-  {
-    'id': '0',
-    'name': 'Alexandre',
-    'cpf': '12345678901',
-    'e-mail': 'alexandre@email.com',
-    'phone_number': '+5521991112233',
-    'created_at': 'DD/MM/YYYY 00:01',
-    'updated_at': 'DD/MM/YYYY 00:02',
-  },
-  {
-    'id': '1',
-    'name': 'Alex',
-    'cpf': '01123456789',
-    'e-mail': 'alex@email.com',
-    'phone_number': '+5521991112244',
-    'created_at': 'DD/MM/YYYY 00:03',
-    'updated_at': 'DD/MM/YYYY 00:04',
-  }
-]
 
 class User(Resource):
   def get(self, id):
