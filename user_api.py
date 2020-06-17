@@ -1,15 +1,24 @@
 from flask import Flask, request
+from flask_httpauth import HTTPBasicAuth
 from flask_restful import Resource, Api
 from model import Users, Orders, Sign_In
 from sqlalchemy.sql import func
 from datetime import datetime
 import json
 
+auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
 
+@auth.verify_password
+def acknowledge(login, password):
+    if not (login, password):
+        return False
+    return Sign_In.query.filter_by(login=login, password=password).first()
+
 
 class User(Resource):
+  @auth.login_required
   def get(self, name):
     user = Users.query.filter_by(name=name).filter()
     try:
@@ -25,8 +34,9 @@ class User(Resource):
     
     except AttributeError:
       response = {'status': 'error', 'message': 'Not Found!'}
-    return response  
+    return response
 
+  @auth.login_required
   def put(self, name):
     user = Users.query.filter_by(name=name).filter()
     data = request.json
@@ -46,6 +56,7 @@ class User(Resource):
     }
     return response
 
+  @auth.login_required
   def delete(self, name):
     user = Users.query.filter_by(name=name).filter()
     message = 'User {} deleted succesfully'.format(user.name)
@@ -53,6 +64,7 @@ class User(Resource):
     return {'status':'sucess', 'message': message}
 
 class ListUsers(Resource):
+  @auth.login_required
   def get(self):
     users = Users.query.all()
     response = [{
@@ -65,6 +77,7 @@ class ListUsers(Resource):
       'updated_at': i.updated_at} for i in users]
     return response
 
+  @auth.login_required
   def post(self):
     data = request.json
     user = Users(name=data['name'],
@@ -86,6 +99,7 @@ class ListUsers(Resource):
     return response
 
 class ListOrders(Resource):
+  @auth.login_required
   def get(self):
     orders = Orders.query.all()
     response = [{ 
@@ -99,6 +113,7 @@ class ListOrders(Resource):
       'updated_at': i.updated_at} for i in orders]
     return response
 
+  @auth.login_required
   def post(self):
     data = request.json
     user = Users.query.filter_by(name=data['user']).first()
@@ -125,7 +140,7 @@ class ListOrders(Resource):
 api.add_resource(User, '/users/<string:name>/')
 api.add_resource(ListUsers, '/users/')
 api.add_resource(ListOrders, '/orders/')
-#api.add_resource(Orders, '/orders/<string:name>/')
+#api.add_resource(Orders, '/orders/<string:name>/') #need a bug fix
 
 
 if __name__ == "__main__":

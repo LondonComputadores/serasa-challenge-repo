@@ -34,7 +34,7 @@ def find_order_by_item_description():
 
 def update_order():
     order = Orders.query.filter_by(item_description='Script').first()
-    order.item_description = 'Software'
+    order.item_description = 'WebApp'
     order.save()
 
 def delete_order(*args):
@@ -49,14 +49,21 @@ def insert_user_sign_in(login, password):
     sign_in = Sign_In(login=login, password=password)
     sign_in.save()
 
+def find_all_sign_ins():
+    sign_in = Sign_In.query.all()
+    print(sign_in)
+
 if __name__ == "__main__":
     #insert_users('Almir')
     #find_user_by_name()
     #update_user()
     #delete_user('Alexandre')
-    #find_all_users()
-    #insert_user_sign_in('Alex', '1234')
+    find_all_users()
+    #insert_user_sign_in('andre', '123456')
     #insert_orders('Hardware')
+    #update_order()
+    #delete_order() #Need a fix
     #find_order_by_item_description()
     find_all_orders()
+    find_all_sign_ins()
     
