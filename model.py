@@ -1,14 +1,19 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
 from sqlalchemy.sql import func
+from datetime import datetime
+import json
+
 
 engine = create_engine('sqlite:///orders.db', convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, bind=engine))
 
 Base = declarative_base()
 Base.query = db_session.query_property()
+
+time_created = Column(DateTime(timezone=True), server_default=func.now())
+time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
 class Users(Base):
     __tablename__='users'
@@ -17,8 +22,8 @@ class Users(Base):
     cpf = Column(Integer)
     email = Column(String(50), index=True)
     phone_number = Column(Integer)
-    created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    created_at = Column(String(time_created))
+    updated_at = Column(String(time_updated))
 
     def __repr__(self):
         return '<User {}>'.format(self.name)
@@ -39,12 +44,12 @@ class Orders(Base):
     item_quantity = Column(Integer)
     item_price = Column(Float)
     total_value = Column(Float)
-    created_at = Column(DateTime, default=datetime.now)
-    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    created_at = Column(String(time_created))
+    updated_at = Column(String(time_updated))
     user = relationship('Users')
 
     def __repr__(self):
-        return '<Orders {}>'.format(self.name)
+        return '<Orders {}>'.format(self.item_description)
 
     def save(self):
         db_session.add(self)
