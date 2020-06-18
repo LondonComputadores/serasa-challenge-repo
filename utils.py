@@ -1,19 +1,23 @@
 from model import Users, Orders, Sign_In
 
+#Insere usuários na tabela users
 def insert_users(*args):
     user = Users(name='Alexandre')
     print(user)
     user.save()
 
+#Retorna usuário pelo nome
 def find_user_by_name():
     user = Users.query.filter_by(name='Alexandre').first()
     print(user.name)
 
+#Altera as informações de usuário
 def update_user():
     user = Users.query.filter_by(name='Alexandre').first()
     user.name = 'Angelina'
     user.save()
 
+#Exclui um usuário pelo nome
 def delete_user(*args):
     user = Users.query.filter_by(name='Alexandre').first()
     user.delete()
@@ -59,7 +63,7 @@ if __name__ == "__main__":
     #update_user()
     #delete_user('Alexandre')
     find_all_users()
-    #insert_user_sign_in('andre', '123456')
+    insert_user_sign_in('andre', '123456')
     #insert_orders('Hardware')
     #update_order()
     #delete_order() #Need a fix

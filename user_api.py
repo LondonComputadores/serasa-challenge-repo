@@ -5,21 +5,28 @@ from model import Users, Orders, Sign_In
 from sqlalchemy.sql import func
 from datetime import datetime
 import json
+import redis
 
 auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
 
+cache = redis.Redis(host='redis', port=6379)
+
 @auth.verify_password
 def acknowledge(login, password):
-    if not (login, password):
-        return False
-    return Sign_In.query.filter_by(login=login, password=password).first()
+  """
+      Esse método verifica login do usuário
+  """
+    # if not (login, password):
+    #     return False
+    # return Sign_In.query.filter_by(login=login, password=password).first()
 
 
 class User(Resource):
-  @auth.login_required
+  #@auth.login_required #Precisa comentar essa linha para rodar o docker
   def get(self, name):
+    #Lista usuário pelo nome e caso não encontrado retorna mensagem de erro.
     user = Users.query.filter_by(name=name).filter()
     try:
       response = {
@@ -38,6 +45,7 @@ class User(Resource):
 
   @auth.login_required
   def put(self, name):
+    #Altera dados do usuário
     user = Users.query.filter_by(name=name).filter()
     data = request.json
     if 'name' in data:
@@ -58,13 +66,15 @@ class User(Resource):
 
   @auth.login_required
   def delete(self, name):
+    #Exclui um usuário e retorna messagem de confirmação
     user = Users.query.filter_by(name=name).filter()
     message = 'User {} deleted succesfully'.format(user.name)
     user.delete()
     return {'status':'sucess', 'message': message}
 
 class ListUsers(Resource):
-  @auth.login_required
+  #Lista todos os usuários
+  #@auth.login_required #Precisa comentar essa linha para rodar o docker
   def get(self):
     users = Users.query.all()
     response = [{
@@ -79,6 +89,7 @@ class ListUsers(Resource):
 
   @auth.login_required
   def post(self):
+    #Cria um novo usuário
     data = request.json
     user = Users(name=data['name'],
                  cpf=data['cpf'],
@@ -101,6 +112,7 @@ class ListUsers(Resource):
 class ListOrders(Resource):
   @auth.login_required
   def get(self):
+    #Lista os pedidos e retorna junto com as informações do usuário
     orders = Orders.query.all()
     response = [{ 
       'id': i.id,
@@ -115,6 +127,7 @@ class ListOrders(Resource):
 
   @auth.login_required
   def post(self):
+    #Cria novo pedido com id do usuário e habilita consulta pelo nome
     data = request.json
     user = Users.query.filter_by(name=data['user']).first()
     order = Orders(user_id=data['user_id'],
