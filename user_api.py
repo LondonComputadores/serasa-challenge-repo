@@ -30,13 +30,13 @@ class User(Resource):
     user = Users.query.filter_by(name=name).filter()
     try:
       response = {
-        'id': 'user.id',
-        'name': 'user.user_name',
-        'cpf': 'user.cpf', 
-        'email':'user.email', 
-        'phone_number': 'user.phone_number', 
-        'created_at': 'user.created_at',
-        'updated_at': 'user.updated_at'
+        'id': user.id,
+        'name': user.user_name,
+        'cpf': user.cpf, 
+        'email': user.email, 
+        'phone_number': user.phone_number, 
+        'created_at': user.created_at,
+        'updated_at': user.updated_at
       }
     
     except AttributeError:
@@ -54,13 +54,13 @@ class User(Resource):
       user.email = data['email']
     user.save()
     response = {
-      'id': 'user.id',
-      'name': 'user.user_name',
-      'cpf': 'user.cpf', 
-      'email':'user.email', 
-      'phone_number': 'user.phone_number', 
-      'created_at': 'user.created_at',
-      'updated_at': 'user.updated_at'
+      'id': user.id,
+      'name': user.user_name,
+      'cpf': user.cpf, 
+      'email':user.email, 
+      'phone_number': user.phone_number, 
+      'created_at': user.created_at,
+      'updated_at': user.updated_at
     }
     return response
 
@@ -99,13 +99,13 @@ class ListUsers(Resource):
                  updated_at=data['updated_at'])
     user.save
     response = {
-      'id': 'user.id',
-      'name': 'user.name',
-      'cpf': 'user.cpf', 
-      'email':'user.email', 
-      'phone_number': 'user.phone_number', 
-      'created_at': 'user.created_at',
-      'updated_at': 'user.updated_at'
+      'id': user.id,
+      'name': user.name,
+      'cpf': user.cpf, 
+      'email': user.email, 
+      'phone_number': user.phone_number, 
+      'created_at': user.created_at,
+      'updated_at': user.updated_at
     }
     return response
 
@@ -139,14 +139,14 @@ class ListOrders(Resource):
                    updated_at=data['updated_at'])
     order.save()
     response = {
-        'id': 'user.id',
-        'user_id': 'user.user_id',
-        'item_description': 'user.item_description', 
-        'item_quantity':'user.item_quantity', 
-        'item_price': 'user.item_price', 
-        'total_value': 'user.total_value',
-        'created_at': 'user.created_at',
-        'updated_at': 'user.updated_at'
+        'id': user.id,
+        'user_id': user.user_id,
+        'item_description': user.item_description, 
+        'item_quantity': user.item_quantity, 
+        'item_price': user.item_price, 
+        'total_value': user.total_value,
+        'created_at': user.created_at,
+        'updated_at': user.updated_at
     }
     return response
 

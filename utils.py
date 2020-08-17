@@ -63,7 +63,7 @@ if __name__ == "__main__":
     #update_user()
     #delete_user('Alexandre')
     find_all_users()
-    insert_user_sign_in('andre', '123456')
+    #insert_user_sign_in('andre', '123456')
     #insert_orders('Hardware')
     #update_order()
     #delete_order() #Need a fix

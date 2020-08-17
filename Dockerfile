@@ -2,12 +2,16 @@ FROM python:3.8-alpine
 WORKDIR /code
 ENV FLASK_APP user_api.py
 ENV FLASK_RUN_HOST 0.0.0.0
-RUN apk add --no-cache gcc musl-dev linux-headers
+RUN apk add --no-cache postgresql-dev gcc musl-dev linux-headers
 COPY requirements-dev.txt requirements-dev.txt
-RUN pip install libpq-dev | pip install -r requirements-dev.txt
+CMD sudo apt install postgresql-server-dev-all \
+    export PATH=/usr/lib/postgresql/X.Y/bin/:$PATH
+RUN pip install -r requirements-dev.txt
 COPY . .
 CMD ["flask", "run"]
 
+
+#CMD sudo apt install postgresql-server-dev-all \
 
 ########################################################################
 # Abaixo seria uma opção para iniciar corretamente o virtualenv
